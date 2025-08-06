@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espresso Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Anime.js for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Chart.js for progress ring -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="brand">
+                <div class="logo">☕</div>
+                <h1>Espresso Timer</h1>
+            </div>
+            <div class="user">
+                <span>Jacob22092</span>
+                <div class="status online"></div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Timer Section -->
+            <section class="timer-section">
+                <div class="timer-container">
+                    <!-- Progress Circle -->
+                    <div class="progress-circle">
+                        <svg viewBox="0 0 200 200" class="progress-svg">
+                            <circle cx="100" cy="100" r="90" class="progress-bg"></circle>
+                            <circle cx="100" cy="100" r="90" class="progress-bar" id="progressBar"></circle>
+                        </svg>
+                        
+                        <!-- Coffee Animation -->
+                        <div class="coffee-animation">
+                            <!-- Machine -->
+                            <div class="machine">
+                                <div class="portafilter">
+                                    <div class="grounds"></div>
+                                </div>
+                                <div class="group-head">
+                                    <div class="spout"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Coffee Stream -->
+                            <div class="coffee-stream" id="coffeeStream">
+                                <div class="stream-drop"></div>
+                                <div class="stream-drop"></div>
+                                <div class="stream-drop"></div>
+                            </div>
+                            
+                            <!-- Cup -->
+                            <div class="cup-container">
+                                <div class="cup" id="cup">
+                                    <div class="coffee-level" id="coffeeLevel"></div>
+                                    <div class="crema-level" id="cremaLevel"></div>
+                                    <div class="cup-highlight"></div>
+                                </div>
+                                <div class="saucer"></div>
+                            </div>
+                            
+                            <!-- Steam -->
+                            <div class="steam" id="steam">
+                                <div class="steam-line"></div>
+                                <div class="steam-line"></div>
+                                <div class="steam-line"></div>
+                            </div>
+                            
+                            <!-- Timer Display -->
+                            <div class="timer-display">
+                                <div class="time-value" id="timeValue">25.0</div>
+                                <div class="time-unit">seconds</div>
+                                <div class="phase-name" id="phaseName">Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Weight Display -->
+                <div class="weight-card">
+                    <div class="weight-icon">⚖️</div>
+                    <div class="weight-info">
+                        <div class="weight-value" id="weightValue">0.0g</div>
+                        <div class="weight-label">Current Yield</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Controls Section -->
+            <section class="controls-section">
+                <div class="controls-card">
+                    <!-- Stats -->
+                    <div class="stats-row">
+                        <div class="stat">
+                            <div class="stat-label">Flow Rate</div>
+                            <div class="stat-value" id="flowRate">0.0 ml/s</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Ratio</div>
+                            <div class="stat-value" id="ratio">1:2.0</div> 
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="settings">
+                        <h3>Brew Settings</h3>
+                        <div class="settings-grid">
+                            <div class="setting">
+                                <label>Time</label>
+                                <input type="number" id="timeInput" value="25" min="15" max="45" step="0.5">
+                                <span>s</span>
+                            </div>
+                            <div class="setting">
+                                <label>Dose</label>
+                                <input type="number" id="doseInput" value="18" min="14" max="22" step="0.5">
+                                <span>g</span>
+                            </div>
+                            <div class="setting">
+                                <label>Target</label>
+                                <div class="target-display" id="targetDisplay">36 ml</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="controls">
+                        <button class="btn btn-start" id="startBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            Start Brewing
+                        </button>
+                        
+                        <div class="secondary-controls">
+                            <button class="btn btn-pause" id="pauseBtn" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                                </svg>
+                                Pause
+                            </button>
+                            
+                            <button class="btn btn-reset" id="resetBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm0-10h2v8h-2z"/>
+                                </svg>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phases -->
+                    <div class="phases">
+                        <h3>Extraction Phases</h3>
+                        <div class="phase-list">
+                            <div class="phase active" id="phase1">
+                                <div class="phase-dot"></div>
+                                <div class="phase-info">
+                                    <span>Pre-infusion</span>
+                                    <small>0-5s</small>
+                                </div>
+                            </div>
+                            <div class="phase" id="phase2">
+                                <div class="phase-dot"></div>
+                                <div class="phase-info">
+                                    <span>Main Extraction</span>
+                                    <small>5-20s</small>
+                                </div>
+                            </div>
+                            <div class="phase" id="phase3">
+                                <div class="phase-dot"></div>
+                                <div class="phase-info">
+                                    <span>Finish</span>
+                                    <small>20-25s</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="session-info">
+                <div class="session-stat">
+                    <span>Today: 12 shots</span>
+                </div>
+                <div class="session-stat">
+                    <span>Avg: 24.8s</span>
+                </div>
+                <div class="session-stat">
+                    <span>Success: 94%</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
