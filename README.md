@@ -5,8 +5,6 @@
 
 **A sleek, professional espresso brewing timer with real-time animations**
 
-Built by [@Jacob22092](https://github.com/Jacob22092) | August 2025
-
 ---
 
 ## 🚀 What is this?
