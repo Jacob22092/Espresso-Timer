@@ -1,5 +1,8 @@
 # ☕ Espresso Timer
 
+![Espresso Timer Social Preview](https://i.imgur.com/r83gJWy.png)
+
+
 **A sleek, professional espresso brewing timer with real-time animations**
 
 Built by [@Jacob22092](https://github.com/Jacob22092) | August 2025
